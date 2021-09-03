@@ -1,0 +1,10 @@
+-----------------------------------------------------------------
+>> Elastohydrodynamic Lubrication Point Contact Solver for MATLAB
+-----------------------------------------------------------------
+
+EHL point contact solver based on the theory presented in Venner and Lubrecht's book "Multigrid Methods for EHL", specifically chapter 6 (Elastohydrodynamic Lubrication), with the following modifications:
+- Fourier Transforms are used to calculate deformation instead of the Multi-Level Multi-Integration mentioned in the book
+- The solution method is adapated to accomodate efficient execution on the GPU
+
+References:
+Venner, C.H., Lubrecht, A.A. (Eds.), 2000. Chapter 6 - ElastoHydrodynamic Lubrication, in: Multilevel Methods in Lubrication, Tribology Series. Elsevier, pp. 179–223. https://doi.org/10.1016/S0167-8922(00)80010-3

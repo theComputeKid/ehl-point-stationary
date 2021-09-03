@@ -1,0 +1,8 @@
+# MATLAB files
+*.asv
+*.fig
+*.mat
+
+# IDE
+.vscode
+.vs

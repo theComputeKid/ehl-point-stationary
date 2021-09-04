@@ -64,14 +64,18 @@ classdef tribosolver < handle
         end
         
         results = solve(obj,verbosity);
-        plotResults(obj);
         
     end
     
     methods(Access=private)
         
         initLevels(obj);
-        mgCycle(obj);
+        mgFull(obj,l);
+        mgCycle(obj,l);
+        relax(obj,l);
+        coarsen(obj,l);
+        refine(obj,l);
+        mgFullInterp(obj,l);
         
     end
 end

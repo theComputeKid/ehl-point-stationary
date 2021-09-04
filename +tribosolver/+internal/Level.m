@@ -40,6 +40,8 @@ classdef Level < handle
             
             obj.Domain = tribosolver.internal.Domain(domain,exec,l);
             obj.Results.p = initP(obj.Domain.x,obj.Domain.y);
+            obj.Results.x = obj.Domain.x;
+            obj.Results.y = obj.Domain.y;
             obj.h = initH(obj.Domain.x,obj.Domain.y);
             
             [nx,ny] = size(obj.Domain.x);
@@ -49,7 +51,15 @@ classdef Level < handle
             obj.p_rhs = zeros(nx,ny,"like",obj.h);
             obj.p_old = zeros(nx,ny,"like",obj.h);
             
+            obj.calcDeformation();
+            
         end
+        
+        function calcDeformation(obj)
+            obj.Results.w = conv2(obj.Results.p,obj.k,'same');
+            obj.Results.h = obj.Results.h0 + obj.h + obj.Results.w;
+        end
+ 
     end
 end
 

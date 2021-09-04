@@ -25,13 +25,32 @@ classdef Relaxation
         numCycles(1,1) { ...
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
             mustBePositive ...
-            } = 5000;
+            } = 2000;
         
+        itPre(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBePositive ...
+            } = 3;
+        
+        itMain(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBePositive ...
+            } = 10;
+        
+        itPost(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBePositive ...
+            } = 3;
+        
+        gamma(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBePositive ...
+            } = 2;
     end
     
     methods
         
-        function obj = Relaxation(jac,gs,h0,numCycles,switchEpsValue)
+        function obj = Relaxation(jac,gs,h0,numCycles,gamma,switchEpsValue)
             
             % Syntax:
             % obj = Relaxation(jac,gs,h0)
@@ -41,8 +60,7 @@ classdef Relaxation
                 return;
             end
             
-            
-            narginchk(3,5)
+            narginchk(3,6)
             
             obj.jac = jac;
             obj.gs = gs;
@@ -53,6 +71,10 @@ classdef Relaxation
             end
             
             if nargin > 4
+                obj.gamma = gamma;
+            end
+            
+            if nargin > 5
                 obj.switchEpsValue = switchEpsValue;
             end
             

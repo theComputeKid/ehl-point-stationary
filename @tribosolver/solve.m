@@ -3,12 +3,6 @@ function results = solve(obj)
 % Main solution driver routine for tribosolver
 
 obj.initLevels();
-
-for kc = 1:obj.Relaxation.numCycles
-    
-    obj.mgCycle();
-    
-end
-
-results = tribosolver.Results;
+obj.mgFull(obj.Domain.mgl);
+results = obj.Levels(obj.Domain.mgl).Results;
 end

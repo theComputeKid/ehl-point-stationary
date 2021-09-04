@@ -1,4 +1,4 @@
-classdef Domain
+classdef Domain < handle
     
     % Properties that define the global domain on which the problem is to
     % be solved. Internal solver use only.
@@ -49,7 +49,6 @@ classdef Domain
                 
                 obj.dx = (domain.xout - domain.xin)/(nx - 1);
                 obj.dx = cast(obj.dx,t);
-                obj.dx = obj.dx/(2^cast(l-1,t));
                 obj.x = domain.xin + (0:nx-1)*obj.dx;
             end
             
@@ -62,7 +61,6 @@ classdef Domain
                 
                 obj.dy = (domain.yout - domain.yin)/(ny - 1);
                 obj.dy = cast(obj.dy,t);
-                obj.dy = obj.dy/(2^cast(l-1,t));
                 obj.y = domain.yin + (0:ny-1)*obj.dy;
             end
             

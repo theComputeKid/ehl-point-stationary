@@ -1,4 +1,4 @@
-classdef Domain < handle
+classdef Domain
     
     % Properties that define the global domain on which the problem is to
     % be solved. Internal solver use only.
@@ -25,6 +25,15 @@ classdef Domain < handle
         
         y(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
         
+        nx(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBeGreaterThanOrEqual(nx,32) ...
+            } = 32;
+        
+        ny(1,1) uint64 { ...
+            mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
+            mustBeGreaterThanOrEqual(ny,32) ...
+            } = 32;
     end
     
     methods
@@ -47,6 +56,7 @@ classdef Domain < handle
                     nx = nx*2 - 1;
                 end
                 
+                obj.nx = nx;
                 obj.dx = (domain.xout - domain.xin)/(nx - 1);
                 obj.dx = cast(obj.dx,t);
                 obj.x = domain.xin + (0:nx-1)*obj.dx;
@@ -59,6 +69,7 @@ classdef Domain < handle
                     ny = ny*2 - 1;
                 end
                 
+                obj.ny = ny;
                 obj.dy = (domain.yout - domain.yin)/(ny - 1);
                 obj.dy = cast(obj.dy,t);
                 obj.y = domain.yin + (0:ny-1)*obj.dy;

@@ -3,13 +3,13 @@ function mgCycle(obj,l)
 
 if (l == 1)
     
-    for i = 1:1:obj.Relaxation.itMain
+    for i = 1:obj.Relaxation.itMain
         obj.relax(l);
     end
     
 else
     
-    for i = 1:1:obj.Relaxation.itPre
+    for i = 1:obj.Relaxation.itPre
         obj.relax(l);
     end
     
@@ -21,7 +21,7 @@ else
     
     obj.refine(l);
     
-    for i = 1:1:obj.Relaxation.itPost
+    for i = 1:obj.Relaxation.itPost
         obj.relax(l);
     end
     

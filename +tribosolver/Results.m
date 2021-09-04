@@ -1,4 +1,4 @@
-classdef Results < handle
+classdef Results
     
     % Holds result from a solution sweep
     %

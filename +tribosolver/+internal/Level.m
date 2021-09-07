@@ -10,6 +10,8 @@ classdef Level < handle
         
         k(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
         
+        k_fft(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
+        
         h(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
         
     end
@@ -51,15 +53,33 @@ classdef Level < handle
             obj.p_rhs = zeros(nx,ny,"like",obj.h);
             obj.p_old = zeros(nx,ny,"like",obj.h);
             
+            padX = obj.Domain.nx*3-1;
+            padY = obj.Domain.ny*3-1;
+            obj.k_fft = fft2(obj.k,padX,padY);
+            
             obj.calcDeformation();
             
         end
         
         function calcDeformation(obj)
-            obj.Results.w = conv2(obj.Results.p,obj.k,'same');
+            
+            if numel(obj.k) < (32*32)
+                
+                obj.Results.w = conv2(obj.Results.p,obj.k,'same');
+            else
+                
+                nx = obj.Domain.nx;
+                ny = obj.Domain.ny;
+                [padX,padY] = size(obj.k_fft);
+                w=ifft2(fft2(obj.Results.p,padX,padY) .* obj.k_fft);
+                obj.Results.w=w(nx:(2*nx-1),ny:(2*ny-1));
+                
+            end
+            
             obj.Results.h = obj.Results.h0 + obj.h + obj.Results.w;
+            
         end
- 
+        
     end
 end
 

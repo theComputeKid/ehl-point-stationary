@@ -3,8 +3,18 @@ function mgFull(obj,l)
 
 if (l == 1)
     
-    for i = 1:1:obj.Relaxation.itMain
-        obj.relax(l);
+    if obj.Domain.mgl == 1
+        
+        for i = 1:obj.Relaxation.numCycles
+            obj.relax(l);
+        end
+        
+    else
+        
+        for i = 1:obj.Relaxation.itMain
+            obj.relax(l);
+        end
+        
     end
     
 else

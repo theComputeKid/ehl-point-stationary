@@ -72,7 +72,8 @@ classdef tribosolver < handle
         initLevels(obj);
         mgFull(obj,l);
         mgCycle(obj,l);
-        relax(obj,l);
+        relaxP(obj,l);
+        relaxH(obj,l);
         coarsen(obj,l);
         refine(obj,l);
         mgFullInterp(obj,l);

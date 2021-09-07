@@ -6,13 +6,15 @@ if (l == 1)
     if obj.Domain.mgl == 1
         
         for i = 1:obj.Relaxation.numCycles
-            obj.relax(l);
+            obj.relaxP(l);
+            obj.relaxH0(l);
         end
         
     else
         
         for i = 1:obj.Relaxation.itMain
-            obj.relax(l);
+            obj.relaxP(l);
+            obj.relaxH0(l);
         end
         
     end

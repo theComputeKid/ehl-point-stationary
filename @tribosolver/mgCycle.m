@@ -4,13 +4,14 @@ function mgCycle(obj,l)
 if (l == 1)
     
     for i = 1:obj.Relaxation.itMain
-        obj.relax(l);
+        obj.relaxP(l);
+        obj.relaxH0(l);
     end
     
 else
     
     for i = 1:obj.Relaxation.itPre
-        obj.relax(l);
+        obj.relaxP(l);
     end
     
     obj.coarsen(l);
@@ -22,7 +23,7 @@ else
     obj.refine(l);
     
     for i = 1:obj.Relaxation.itPost
-        obj.relax(l);
+        obj.relaxP(l);
     end
     
 end

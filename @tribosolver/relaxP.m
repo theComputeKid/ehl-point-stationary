@@ -1,4 +1,4 @@
-function relax(obj,l)
+function relaxP(obj,l)
 
 % Extract necessary data. Some data is read-only so there should be no
 % danger of unneccesary copies.

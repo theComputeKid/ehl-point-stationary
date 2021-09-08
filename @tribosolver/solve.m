@@ -8,6 +8,7 @@ if obj.Execution.Verbosity
     disp("Starting solution scheme. Convergence monitor:")
 end
 
+tic
 for i = 1:obj.Relaxation.numCycles
     p = obj.Levels(obj.Domain.mgl).Results.p;
     h = obj.Levels(obj.Domain.mgl).Results.h;
@@ -15,6 +16,11 @@ for i = 1:obj.Relaxation.numCycles
     if checkTol(obj,p,h,i)
         break;
     end
+end
+
+t = toc;
+if obj.Execution.Verbosity
+    disp("Time to solve (s): " + t)
 end
 
 results = obj.Levels(obj.Domain.mgl).Results;

@@ -35,6 +35,8 @@ pcim1jm1(2:nxc,2:nyc) = ( ...
     pc(1:end-1,1:end-1) - pco(1:end-1,1:end-1) ...
     )*0.25;
 
+[pcim1, pcjm1, pcim1jm1, p] = gather(pcim1,pcjm1,pcim1jm1, p);
+
 for i=2:nxc
     
     iff = 2*i - 1;
@@ -58,6 +60,10 @@ for i=2:nxc
                 pcim1jm1(i,j);
         end
     end
+end
+
+if isgpuarray(pc)
+    p = gpuArray(p);
 end
 
 p(p<0)=0;

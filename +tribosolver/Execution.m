@@ -14,11 +14,13 @@ classdef Execution
             ismember(Device,["gpu","cpu"]) ...
             } = "cpu";
         
+        Verbosity(1,1) uint64 {mustBeNonempty} = false;
+        
     end
     
     methods
         
-        function obj = Execution(basePrecision,device)
+        function obj = Execution(basePrecision,device,verbosity)
             
             % Syntax:
             % obj = Execution(basePrecision,device)
@@ -27,10 +29,14 @@ classdef Execution
                 return;
             end
             
-            narginchk(2,2)
+            narginchk(2,3)
             
             obj.BasePrecision = basePrecision;
             obj.Device = device;
+            
+            if (nargin > 2)
+                obj.Verbosity = verbosity;
+            end
             
         end
         

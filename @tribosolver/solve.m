@@ -3,6 +3,11 @@ function results = solve(obj)
 % Main solution driver routine for tribosolver
 
 obj.initLevels();
+
+if obj.Execution.Verbosity
+    disp("Starting solution scheme. Convergence monitor:")
+end
+
 for i = 1:obj.Relaxation.numCycles
     p = obj.Levels(obj.Domain.mgl).Results.p;
     h = obj.Levels(obj.Domain.mgl).Results.h;
@@ -36,7 +41,9 @@ fb = sum( ...
 
 fbTol = abs(fbNew - fb);
 
-disp("N: " + N + " dP: " + pTol + " dH: " + hTol + " dFb: " + fbTol)
+if obj.Execution.Verbosity
+    disp("N: " + N + " dP: " + pTol + " dH: " + hTol + " dFb: " + fbTol)
+end
 
 hasConverged = (pTol < obj.Tolerance.p) && ...
     (hTol < obj.Tolerance.h) && ...

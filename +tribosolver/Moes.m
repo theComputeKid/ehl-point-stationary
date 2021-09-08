@@ -16,11 +16,14 @@ classdef Moes
             mustBeFloat ...
             } = 0;
         
+        H0(1,1) { ...
+            mustBeFinite, mustBeNonsparse, mustBeFloat ...
+            } = -0.3;
     end
     
     methods
         
-        function obj = Moes(M,L)
+        function obj = Moes(M,L,H0)
             
             % Syntax:
             % obj = Moes(M)
@@ -30,7 +33,7 @@ classdef Moes
                 return;
             end
             
-            narginchk(1,2)
+            narginchk(1,3)
             
             obj.M = M;
             
@@ -38,6 +41,9 @@ classdef Moes
                 obj.L = L;
             end
             
+            if nargin > 2
+                obj.H0 = H0;
+            end
         end
         
     end

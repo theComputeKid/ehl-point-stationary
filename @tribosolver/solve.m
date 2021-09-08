@@ -48,7 +48,8 @@ fb = sum( ...
 fbTol = abs(fbNew - fb);
 
 if obj.Execution.Verbosity
-    disp("N: " + N + " dP: " + pTol + " dH: " + hTol + " dFb: " + fbTol)
+    disp("N: " + N + " H0: " + obj.Levels(obj.Domain.mgl).Results.h0 + ...
+        " dP: " + pTol + " dH: " + hTol + " dFb: " + fbTol)
 end
 
 hasConverged = (pTol < obj.Tolerance.p) && ...

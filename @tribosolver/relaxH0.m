@@ -13,6 +13,7 @@ h0 = h0 + relH0*dF;
 
 for i = 1:obj.Domain.mgl
     obj.Levels(i).Results.h0 = h0;
+    obj.Levels(i).calcDeformation;
 end
 
 end

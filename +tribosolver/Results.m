@@ -12,7 +12,7 @@ classdef Results
         
         w(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
         
-        h0(1,1) {mustBeFinite, mustBeNonsparse, mustBeFloat} = -0.3;
+        h0(1,1) {mustBeFinite, mustBeNonsparse, mustBeFloat} = -0.53;
         
         x(:,:) {mustBeNonsparse, mustBeNonempty, mustBeFloat} = 0;
         

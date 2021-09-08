@@ -11,6 +11,8 @@ for k = 1:mgl
     obj.Levels(k) = tribosolver.internal.Level( ...
         obj.Domain, obj.Execution, k ...
         );
+    obj.Levels(k).Results.h0 = obj.Moes.H0;
 end
+
 
 end

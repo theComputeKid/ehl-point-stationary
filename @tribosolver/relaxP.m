@@ -183,6 +183,10 @@ Lk.Results.p = pGS;
 
 Lk.calcDeformation();
 
-surf(pGS);
-drawnow
+if obj.Execution.Verbosity > 1
+    surf(Lk.Domain.x,Lk.Domain.y,pGS);
+    xlabel("X"); ylabel("Y"); zlabel("P");
+    title("P: Level " + l)
+    drawnow
+end
 end

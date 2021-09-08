@@ -27,12 +27,12 @@ classdef Domain
         
         nx(1,1) uint64 { ...
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
-            mustBeGreaterThanOrEqual(nx,32) ...
+            mustBeGreaterThanOrEqual(nx,16) ...
             } = 32;
         
         ny(1,1) uint64 { ...
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
-            mustBeGreaterThanOrEqual(ny,32) ...
+            mustBeGreaterThanOrEqual(ny,16) ...
             } = 32;
     end
     
@@ -59,7 +59,7 @@ classdef Domain
                 obj.nx = nx;
                 obj.dx = (domain.xout - domain.xin)/(nx - 1);
                 obj.dx = cast(obj.dx,t);
-                obj.x = domain.xin + (0:nx-1)*obj.dx;
+                x = domain.xin + (0:nx-1)*obj.dx;
             end
             
             if strcmpi(domain.typeY,"constant")
@@ -72,10 +72,11 @@ classdef Domain
                 obj.ny = ny;
                 obj.dy = (domain.yout - domain.yin)/(ny - 1);
                 obj.dy = cast(obj.dy,t);
-                obj.y = domain.yin + (0:ny-1)*obj.dy;
+                y = domain.yin + (0:ny-1)*obj.dy;
             end
             
-            [obj.x,obj.y] = meshgrid(obj.x,obj.y);
+            obj.x = repmat(reshape(x,[],1),1,ny);
+            obj.y = repmat(reshape(y,1,[]),nx,1);
             %             obj.dx = gradient(obj.x);
             %             obj.dy = gradient(obj.y);
             

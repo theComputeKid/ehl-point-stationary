@@ -101,7 +101,8 @@ y = cast( (0 : ny - 1),  "like", dy );
 x = (x + 0.5).*dx;
 y = (y + 0.5).*dy;
 
-[xx,yy] = meshgrid(x,y);
+xx = repmat(reshape(x,[],1),1,ny);
+yy = repmat(reshape(y,1,[]),nx,1);
 
 xm = xx - dx;
 ym = yy - dy;

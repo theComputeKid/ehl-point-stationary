@@ -75,6 +75,9 @@ classdef tribosolver < handle
         relaxP(obj,l);
         relaxH(obj,l);
         coarsen(obj,l);
+        coarsenP(obj,l);
+        coarsenPRHS(obj,l);
+        coarsenFB(obj,l);
         refine(obj,l);
         mgFullInterp(obj,l);
         

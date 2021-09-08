@@ -3,12 +3,6 @@ function refine(obj,l)
 Lk = obj.Levels(l);
 Lkc = obj.Levels(l-1);
 
-dx = Lk.Domain.dx;
-dxc = Lkc.Domain.dx;
-
-dy = Lk.Domain.dy;
-dyc = Lkc.Domain.dy;
-
 nx = Lk.Domain.nx;
 nxc = Lkc.Domain.nx;
 
@@ -19,35 +13,53 @@ p = Lk.Results.p;
 pc = Lkc.Results.p;
 pco = Lkc.p_old;
 
-%% Refine P
+iif = 1:2:nx;
+jjf = 1:2:ny;
+
+p(iif,jjf) = p(iif,jjf) + (pc - pco).*(p(iif,jjf) > 0);
+
+pcim1(2:nxc,:) = ( ...
+    pc(2:end,:) - pco(2:end,:) + ...
+    pc(1:end-1,:) - pco(1:end-1,:) ...
+    )*0.5;
+
+pcjm1(:,2:nyc) = ( ...
+    pc(:,2:nyc) - pco(:,2:nyc) + ...
+    pc(:,1:end-1) - pco(:,1:end-1) ...
+    )*0.5;
+
+pcim1jm1(2:nxc,2:nyc) = ( ...
+    pc(2:nxc,2:nyc) - pco(2:nxc,2:nyc) + ...
+    pc(2:nxc,1:end-1) - pco(2:nxc,1:end-1) + ...
+    pc(1:end-1,2:nyc) - pco(1:end-1,2:nyc) + ...
+    pc(1:end-1,1:end-1) - pco(1:end-1,1:end-1) ...
+    )*0.25;
+
 for i=2:nxc
+    
     iff = 2*i - 1;
+    
     for j=2:nyc
+        
         jff = 2*j - 1;
-       
-        if p(iff,jff) > 0
-            p(iff,jff) = p(iff,jff) + (pc(i,j) - pco(i,j));
-        end
         
         if p(iff - 1,jff) > 0 && j < nyc
             p(iff - 1,jff) = p(iff - 1,jff) + ...
-                (pc(i,j) - pco(i,j) + pc(i - 1,j) - pco(i - 1,j))*0.5;
+                pcim1(i,j);
         end
         
-        if p(iff,jff - 1)>0 && i < nxc
-            p(iff,jff - 1) = p(iff,jff - 1) + ...
-                (pc(i,j) - pco(i,j) + pc(i,j - 1) - pco(i,j - 1))*0.5;
+        if p(iff, jff - 1) > 0 && i < nxc
+            p(iff, jff - 1) = p(iff, jff - 1) + ...
+                pcjm1(i,j);
         end
         
-        if (p(iff - 1,jff - 1)>0)
-            p(iff - 1,jff - 1) = p(iff - 1,jff - 1)+ ...
-                (pc(i,j) - pco(i,j) + pc(i,j - 1) - pco(i,j - 1) + ...
-            pc(i - 1,j) - pco(i - 1,j) + pc(i - 1,j - 1) - pco(i - 1,j - 1))*0.25;
+        if (p(iff - 1, jff - 1) > 0)
+            p(iff - 1, jff - 1) = p(iff - 1, jff - 1) + ...
+                pcim1jm1(i,j);
         end
     end
 end
 
 p(p<0)=0;
 obj.Levels(l).Results.p = p;
-
 end

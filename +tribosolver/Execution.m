@@ -2,6 +2,16 @@ classdef Execution
     
     % Execution strategy of the solver.
     %
+    % Syntax:
+    % obj = Execution(basePrecision,device, verbosity)
+    %
+    % Input arguments:
+    % BasePrec: Precision of the calculations
+    % Device: Choose whether to run on the CPU or GPU. Caution: GPU is not
+    % optimized yet.
+    % Verbosity: 1 for text update, 2 for graphical plot update during the
+    % solution process (slows down solution process)
+    %
     % Copyright (C) 2021 theComputeKid
     
     properties(SetAccess=immutable)

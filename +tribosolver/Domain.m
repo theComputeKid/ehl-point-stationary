@@ -3,6 +3,19 @@ classdef Domain
     % Properties that define the global domain on which the problem is to
     % be solved.
     %
+    % Syntax:
+    % obj = Domain(xin,xout,nx,yin,yout,ny,mgl)
+    % obj = Domain(xin,xout,nx,yin,yout,ny,mgl,typeX)
+    % obj = Domain(xin,xout,nx,yin,yout,ny,mgl,typeX,typeY)
+    %
+    % Input arguments:
+    % mgl: The total number of levels in the multigrid system
+    % nx, ny: Grid points along the respective direction
+    % xin, xout, yin, yout: Domain boundary is [xin xout] and [yin yout].
+    % This is non-dimensionalized to the Moes Parameters.
+    % typeX, typeY: Type of domain. Currently, only "constant" grid spacing
+    % is supported. Chebyshev could be added in the future.
+    %
     % Copyright (C) 2021 theComputeKid
     
     properties(SetAccess=immutable)
@@ -11,6 +24,7 @@ classdef Domain
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
             mustBePositive ...
             } = 3;
+        
         
         nx(1,1) uint64 { ...
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
@@ -21,6 +35,7 @@ classdef Domain
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
             mustBeGreaterThanOrEqual(ny,16) ...
             } = 32;
+        
         
         xin(1,1) double { ...
             mustBeFinite, mustBeNonsparse, mustBeNonempty, ...
@@ -43,12 +58,13 @@ classdef Domain
             } = 3;
         
         typeX(1,1) string { ...
-            ismember(typeX,["constant","chebyshev"]) ...
+            ismember(typeX,["constant"]) ...
             } = "constant";
         
         typeY(1,1) string { ...
-            ismember(typeY,["constant","chebyshev"]) ...
+            ismember(typeY,["constant"]) ...
             } = "constant";
+        
     end
     
     methods

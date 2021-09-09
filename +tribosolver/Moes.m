@@ -2,6 +2,14 @@ classdef Moes
     
     % Non-dimensional Moes Parameters used in the model.
     %
+    % Syntax:
+    % obj = Execution(basePrecision,device, verbosity)
+    %
+    % Input arguments:
+    % M: Moes M parameter
+    % L: Moes L parameter
+    % H0: Initial H0 solution guess
+    %
     % Copyright (C) 2021 theComputeKid
     
     properties(SetAccess=immutable)

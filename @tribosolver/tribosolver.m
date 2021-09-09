@@ -1,7 +1,8 @@
 classdef tribosolver < handle
     % Container for a Point Contact ElastoHydroDynamic Lubrication Model.
     % Parameters can be provided in any order. The Domain and Moes
-    % parameters are required, the other arguments are optional.
+    % parameters are required, the other arguments are optional. Each input
+    % is its own classdef inside the tribosolver namespace.
     %
     % Syntax:
     % model = tribosolver(Domain,Moes,Execution,Relaxation,Tolerance)

@@ -177,11 +177,10 @@ for j = jj(jj > 3 & jj < ny - 2)
     pGS(iiJAC + 1, j) = pGS(iiJAC + 1, j) - 0.25*del(iiJAC);
     pGS(iiJAC, j + 1) = pGS(iiJAC, j + 1) - 0.25*del(iiJAC);
     
-    pGS(:,(j-1):(j+1)) = pGS(:,(j-1):(j+1)).*(pGS(:,(j-1):(j+1)) > 0);
+    pGS(pGS<0) = 0;
     
 end
 
-pGS(pGS<0) = 0;
 Lk.Results.p = pGS;
 
 Lk.calcDeformation();

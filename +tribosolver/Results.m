@@ -31,13 +31,13 @@ classdef Results
         function plotW(obj)
             title("Deformation")
             surf(obj.x,obj.y,obj.w);
-            xlabel("X"); ylabel("Y");zlabel("H");
+            xlabel("X"); ylabel("Y");zlabel("W");
         end
         
         function plotP(obj)
             title("Fluid Pressure")
             surf(obj.x,obj.y,obj.p);
-            xlabel("X"); ylabel("Y");zlabel("H");
+            xlabel("X"); ylabel("Y");zlabel("P");
         end
         
     end

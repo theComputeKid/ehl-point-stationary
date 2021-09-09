@@ -14,7 +14,10 @@ moes = setMoes();
 exec = setExecution();
 relax = setRelaxation();
 
-model = tribosolver(domain,moes,exec,relax);
+% The command to initialize the solver can take arguments in any order, so
+% compared to Example 2, we switch around the places of the inputs to prove
+% our point.
+model = tribosolver(relax,domain,exec,moes);
 results = model.solve();
 results.plotP();
 

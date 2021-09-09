@@ -15,6 +15,10 @@ moes = setMoes();
 
 model = tribosolver(domain,moes);
 results = model.solve();
+
+% Looking at the classdef for tribosolver.Results, we can see that we can
+% plot the film thickness, fluid pressure or deformation. Here we plot the
+% pressure.
 results.plotP();
 
 end

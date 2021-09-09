@@ -16,7 +16,7 @@ exec = setExecution();
 relax = setRelaxation();
 tol = setTolerance();
 
-model = tribosolver(domain,moes,exec,relax,tol);
+model = tribosolver(exec,relax,tol,domain,moes);
 results = model.solve();
 results.plotP();
 
@@ -24,6 +24,12 @@ end
 
 function domain = setDomain()
 
+% If a dense grid is required to solve a particular problem, prefer
+% increasing the density in X (nx) rather than Y (ny). This is because the
+% solver solves one line of Y at a time in a vectorized manner, which is
+% then looped over all the lines. The solver is more efficient at solving a
+% single line (i.e. for all points 1:nx), than looping over all lines
+% (1:ny).
 nx = 32; xin = -3; xout = 1.25;
 ny = 16; yin = -2.25; yout = 2.25;
 mgl = 4;

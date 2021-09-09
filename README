@@ -6,5 +6,18 @@ Based on the theory presented in Venner and Lubrecht's book "Multilevel Methods 
 - Fourier Transforms are used to calculate deformation instead of the Multi-Level Multi-Integration mentioned in the book
 - An option to execute the solver using the GPU is added
 
+Examples are provided in the +examples folder. To run them, you must be in the project root folder (i.e. where this README is). From there, you can run examples from the examples namespace. E.g. from the command window in the root folder:
+>> examples.ex1
+>> examples.ex2
+>> examples.ex3
+>> examples.ex3
+
+Variable naming conventions are kept similar to those used in "Multilevel Methods in Lubrication".
+
+Things to do:
+- Optimize the coarse-grid refinement function
+- Parallelize the line relaxation function on the CPU
+- Optimize the line relaxation function on the GPU
+
 References:
 Venner, C.H., Lubrecht, A.A. (Eds.), 2000. Chapter 6 - ElastoHydrodynamic Lubrication, in: Multilevel Methods in Lubrication, Tribology Series. Elsevier, pp. 179–223. https://doi.org/10.1016/S0167-8922(00)80010-3

@@ -1,12 +1,10 @@
 classdef tribosolver < handle
-    % TRIBOSOLVER:
-    % Container for a Point Contact ElastoHydroDynamic Lubrication Model
+    % Container for a Point Contact ElastoHydroDynamic Lubrication Model.
+    % Parameters can be provided in any order. The Domain and Moes
+    % parameters are required, the other arguments are optional.
     %
     % Syntax:
-    % model = tribosolver(domain,moes)
-    % model = tribosolver(domain,moes,exec)
-    % model = tribosolver(domain,moes,exec,relax)
-    % model = tribosolver(domain,moes,exec,relax,tol)
+    % model = tribosolver(Domain,Moes,Execution,Relaxation,Tolerance)
     %
     % Copyright (C) 2021 theComputeKid
     
@@ -32,7 +30,7 @@ classdef tribosolver < handle
     
     methods
         
-        function obj = tribosolver(domain,moes,exec,relax,tol)
+        function obj = tribosolver(varargin)
             
             % Constructor for the model
             %
@@ -44,22 +42,31 @@ classdef tribosolver < handle
             %
             % Copyright (C) 2021 theComputeKid
             
-            narginchk(2,5)
-            
-            obj.Moes = moes;
-            obj.Domain = domain;
-            
-            if nargin > 2
-                obj.Execution = exec;
+            % Moes and Domain Parameters are necessary, the others are
+            % optional.
+            for i = 1:nargin
+                
+                if isa(varargin{i},"tribosolver.Domain")
+                    obj.Domain = varargin{i};
+                    hasSetDomain = true;
+                elseif isa(varargin{i},"tribosolver.Moes")
+                    obj.Moes = varargin{i};
+                    hasSetMoes = true;
+                elseif isa(varargin{i},"tribosolver.Tolerance")
+                    obj.Tolerance = varargin{i};
+                elseif isa(varargin{i},"tribosolver.Relaxation")
+                    obj.Relaxation = varargin{i};
+                elseif isa(varargin{i},"tribosolver.Execution")
+                    obj.Execution = varargin{i};
+                end
+                
             end
             
-            if nargin > 3
-                obj.Relaxation = relax;
-            end
+            assert(hasSetDomain, ...
+                "Tribosolver: Domain parameters not provided")
             
-            if nargin > 4
-                obj.Tolerance = tol;
-            end
+            assert(hasSetMoes, ...
+                "Tribosolver: Moes parameters not provided")
             
         end
         

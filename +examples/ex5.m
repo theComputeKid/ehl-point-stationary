@@ -1,7 +1,6 @@
-function results = ex3()
+function results = ex5()
 
-% Example #3: Non-Isoviscous fluids with graphical verbosity (caution: This
-% plotting slows down the solution process)
+% Example #5: Same as Example 3, but uses the parallel line solver
 %
 % To run, go to the project root directory and type: examples.ex3
 %
@@ -45,7 +44,7 @@ end
 function exec = setExecution()
 
 % We solve using double precision using the CPU
-prec = "double"; dev = "cpu_seq";
+prec = "double"; dev = "cpu_par";
 
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that

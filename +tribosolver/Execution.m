@@ -21,8 +21,8 @@ classdef Execution
             } = "double";
         
         Device(1,1) string { ...
-            ismember(Device,["gpu","cpu"]) ...
-            } = "cpu";
+            ismember(Device,["gpu","cpu_seq","cpu_par"]) ...
+            } = "cpu_seq";
         
         Verbosity(1,1) uint64 {mustBeNonempty} = false;
         

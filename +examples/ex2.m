@@ -52,7 +52,7 @@ end
 function exec = setExecution()
 
 % We solve using double precision using the CPU
-prec = "double"; dev = "cpu";
+prec = "double"; dev = "cpu_seq";
 
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that

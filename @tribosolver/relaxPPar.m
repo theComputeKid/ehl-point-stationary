@@ -60,15 +60,14 @@ for it = 0:(nD-1)
         reshape(hu(ii,caL),[],1,cnL).*pLine(ii-1,midIDx,:) - ...
         reshape(hud(ii,caL),[],1,cnL).*pLine(ii,midIDx,:) + ...
         reshape(hd(ii,caL),[],1,cnL).*pLine(ii+1,midIDx,:) ...
-        );
+        ); %#ok<AGROW>
 
-   Y(ii-1,1,1:cnL) = reshape(p_rhs(ii,caL),[],1,cnL) - ...
-       QX(ii,1,1:cnL) - QY(ii,1,1:cnL) + ...
-       reshape(H(ii,caL),[],1,cnL);
+    Y(ii-1,1,1:cnL) = reshape(p_rhs(ii,caL),[],1,cnL) - ...
+        QX(ii,1,1:cnL) - QY(ii,1,1:cnL) + ...
+        reshape(H(ii,caL),[],1,cnL);
 
-    n = 0;
-    for ll = caL
-        n = n + 1;
+    for n = 1:cnL
+        ll = caL(n);
 
         iiA = [ ...
             false; ...
@@ -107,41 +106,44 @@ for it = 0:(nD-1)
         AA(9,1:end-3,n) = A(5:nx-1,1,n);
     end
 
-    n = 0;
-    for ll = caL
-        n = n + 1;
-        kl = 3;
-        ku = 2;
-        transposed = false;
-        b = Y(1:end-1,1,n);
+    X = zeros(nx,1,cnL);
+    parfor n = 1:cnL
+        kl = 3; ku = 2; transposed = false;
+        b = Y(:,1,n);
         [LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
             AA(:,:,n), kl, ku ...
             );
 
-        X = [ ...
+        X(:,:,n) = [ ...
             0; ...
             matlab.internal.decomposition.builtin.bandedSolve(...
-            LU, kl, ku, piv, b, transposed); ...
+            LU, kl, ku, piv, b(1:end-1), transposed); ...
             0; ...
             ];
+    end
 
+    p0 = pGS(:,caL);
+
+
+    pGS(:,caL) = pGS(:,caL) + ...
+        reshape( ...
+        X.*(relGS.*aGS+relJAC.*~aGS), ...
+        nx,[]);
+    del = pGS(:,caL) - p0;
+
+    for n = 1:cnL
+        ll = caL(n);
         [iiJAC] = find(~useGS(:,ll));
-        [iiGS] = find(useGS(:,ll));
-
-        p0 = pGS(:,ll);
-        pGS(iiGS,ll) = pGS(iiGS,ll) + X(iiGS)*relGS;
-        pGS(iiJAC,ll) = pGS(iiJAC,ll) + X(iiJAC)*relJAC;
-        del = pGS(:,ll) - p0;
 
         iiJAC(iiJAC < 3 | iiJAC > (nx - 2)) = [];
-        pGS(iiJAC - 1, ll) = pGS(iiJAC - 1, ll) - 0.25*del(iiJAC);
-        pGS(iiJAC, ll - 1) = pGS(iiJAC, ll - 1) - 0.25*del(iiJAC);
-        pGS(iiJAC + 1, ll) = pGS(iiJAC + 1, ll) - 0.25*del(iiJAC);
-        pGS(iiJAC, ll + 1) = pGS(iiJAC, ll + 1) - 0.25*del(iiJAC);
-
-        pGS(pGS<0) = 0;
+        pGS(iiJAC - 1, ll) = pGS(iiJAC - 1, ll) - 0.25*del(iiJAC,n);
+        pGS(iiJAC, ll - 1) = pGS(iiJAC, ll - 1) - 0.25*del(iiJAC,n);
+        pGS(iiJAC + 1, ll) = pGS(iiJAC + 1, ll) - 0.25*del(iiJAC,n);
+        pGS(iiJAC, ll + 1) = pGS(iiJAC, ll + 1) - 0.25*del(iiJAC,n);
 
     end
+
+    pGS(pGS<0) = 0;
 
 end
 Lk.Results.p = pGS;

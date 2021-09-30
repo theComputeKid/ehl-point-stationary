@@ -19,7 +19,7 @@ pGS = p;
 QX = zeros(nx,1,"like",p);
 QY = zeros(nx,1,"like",p);
 Y = zeros(nx-1,1,"like",p);
-A = zeros(nx,6,"like",p);
+A = zeros(nx-2,6+3,"like",p);
 pLine = zeros(nx,3,"like",p);
 
 ii = 2:nx-1;
@@ -55,49 +55,37 @@ for j = jj
         false; ...
         ];
 
-    iiA1 = [ false; false; false; false; iiA(5:end) ];
-    A(:,1) = - dHxm3(:,j).*iiA1;
+    A(1:nx-4,1) = - dHxm3(5:end,j).*iiA(5:end);
 
-    iiA2 = [ false; false; false; iiA(4:end) ];
-    A(:,2) = - dHxm2(:,j).*iiA2;
-    A(:,2) = - 0.25*hl(:,j).*~useGS(:,j).*iiA2 + A(:,2);
+    A(1:nx-3,2) = - dHxm2(4:end,j).*iiA(4:end);
+    A(1:nx-3,2) = - 0.25*hl(4:end,j).*~useGS(4:end,j).*iiA(4:end) + A(1:nx-3,2);
 
-    iiA3 = [ false; false; iiA(3:end) ];
-    A(:,3) = (hl(:,j) - dHxm1(:,j)).*iiA3;
-    A(:,3) = 0.25*hudlr(:,j).*~useGS(:,j).*iiA3 + A(:,3);
+    A(:,3) = (hl(3:end,j) - dHxm1(3:end,j)).*iiA(3:end);
+    A(:,3) = 0.25*hudlr(3:end,j).*~useGS(3:end,j).*iiA(3:end) + A(:,3);
 
-    iiA5 = [ iiA(1:end-1); false ];
-    A(:,5) = (hr(:,j) - dHxp1(:,j)).*iiA5;
-    A(:,5) = 0.25*hudlr(:,j).*~useGS(:,j).*iiA5 + A(:,5);
+    A(:,5) = (hr(1:end-2,j) - dHxp1(1:end-2,j)).*iiA(1:end-2);
+    A(:,5) = 0.25*hudlr(1:end-2,j).*~useGS(1:end-2,j).*iiA(1:end-2) + A(:,5);
 
-    iiA6 = [ iiA(1:end-1); false ];
-    A(:,6) = (- dHxp2(:,j)).*iiA6;
-    A(:,6) = - 0.25*hr(:,j).*~useGS(:,j).*iiA6 + A(:,6);
+    A(4:end,6) = (- dHxp2(3:end-3,j)).*iiA(3:end-3);
+    A(4:end,6) = - 0.25*hr(3:end-3,j).*~useGS(3:end-3,j).*iiA(3:end-3) + A(4:end,6);
 
-    A(ii,4) = - hudlr(ii,j) - dHx(ii,j);
-    A(iiJAC,4) = 1.25*A(iiJAC,4);
+    A(:,4) = - hudlr(ii,j) - dHx(ii,j);
+    A(iiJAC-1,4) = 1.25*A(iiJAC-1,4);
 
-    AA = zeros(3+size(A,2),size(A,1)-2,"like",A);
-    AA(4,3:end) = A(2:nx-3,6);
-    AA(5,2:end) = A(2:nx-2,5);
-    AA(6,:) = A(2:nx-1,4);
-    AA(7,1:end-1) = A(3:nx-1,3);
-    AA(8,1:end-2) = A(4:nx-1,2);
-    AA(9,1:end-3) = A(5:nx-1,1);
+    bA = flip(A.');
 
-    kl = 3;
-    ku = 2;
-    transposed = false;
+    kl = 3; ku = 2; transposed = false;
     b = Y(1:end-1);
+
     [LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
-        AA, kl, ku ...
+        bA, kl, ku ...
         );
 
     X = [ ...
-        0; ...
+        zeros("like",p); ...
         matlab.internal.decomposition.builtin.bandedSolve(...
         LU, kl, ku, piv, b, transposed); ...
-        0; ...
+        zeros("like",p); ...
         ];
 
     p0 = pGS(:,j);
@@ -111,7 +99,11 @@ for j = jj
     pGS(iiJAC + 1, j) = pGS(iiJAC + 1, j) - 0.25*del(iiJAC);
     pGS(iiJAC, j + 1) = pGS(iiJAC, j + 1) - 0.25*del(iiJAC);
 
-    pGS(pGS<0) = 0;
+    if numel(pGS) < 8192
+        pGS(pGS<0) = 0;
+    else
+        pGS(:,(j-1):(j+1)) = pGS(:,(j-1):(j+1)).*(pGS(:,(j-1):(j+1)) > 0);
+    end
 
 end
 

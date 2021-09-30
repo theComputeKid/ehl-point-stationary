@@ -53,8 +53,10 @@ classdef Level < handle
             obj.p_rhs = zeros(nx,ny,"like",obj.h);
             obj.p_old = zeros(nx,ny,"like",obj.h);
             
-            padX = obj.Domain.nx*3-1;
-            padY = obj.Domain.ny*3-1;
+            % TODO: Create some algorithm that finds the best FFT padding
+            % for the fastest convolution.
+            padX = obj.Domain.nx*3;
+            padY = obj.Domain.ny*3;
             obj.k_fft = fft2(obj.k,padX,padY);
             
             obj.calcDeformation();

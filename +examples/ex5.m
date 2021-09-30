@@ -1,8 +1,8 @@
 function results = ex5()
 
-% Example #5: Same as Example 3, but uses the parallel line solver
+% Example #5: Uses the parallel line solver, but single grid only
 %
-% To run, go to the project root directory and type: examples.ex3
+% To run, go to the project root directory and type: examples.ex5
 %
 % Copyright (C) 2021 theComputeKid
 
@@ -24,9 +24,9 @@ end
 
 function domain = setDomain()
 
-nx = 32; xin = -3; xout = 1.5;
-ny = 32; yin = -2.5; yout = 2.5;
-mgl = 2;
+nx = 976; xin = -3; xout = 1.5;
+ny = 976; yin = -2.5; yout = 2.5;
+mgl = 1;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
 
@@ -49,7 +49,7 @@ prec = "double"; dev = "cpu_par";
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that
 % the display of graphical plots is computationally expensive.
-verbosity = 2;
+verbosity = 1;
 
 exec = tribosolver.Execution(prec,dev,verbosity);
 end

@@ -66,38 +66,52 @@ for it = 0:(nD-1)
         QX(ii,1,1:cnL) - QY(ii,1,1:cnL) + ...
         reshape(H(ii,caL),[],1,cnL);
 
+    iiA = cat( 1, ...
+        false(1,1,cnL), ...
+        pLine(ii - 1,midIDx,:) > 0 & pLine(ii + 1,midIDx,:) > 0 & ...
+        pLine(ii,midIDx - 1,:) > 0 & pLine(ii,midIDx + 1,:) > 0, ...
+        false(1,1,cnL) ...
+        );
+
+    iiA1 = cat( 1, ...
+        false(4,1,cnL), ...
+        iiA(5:end,1,:) ...
+        );
+
+    A(:,1,1:cnL) = reshape(-dHxm3(:,caL),[],1,cnL).*iiA1;
+
+    iiA2 = cat( 1, ...
+        false(3,1,cnL), ...
+        iiA(4:end,1,:) ...
+        );
+
+    A(:,2,1:cnL) = reshape(-dHxm2(:,caL),[],1,cnL).*iiA2;
+    A(:,2,1:cnL) = reshape(-0.25*hl(:,caL),[],1,cnL).*~aGS.*iiA2 + A(:,2,1:cnL);
+
+    iiA3 = cat( 1, ...
+        false(2,1,cnL), ...
+        iiA(3:end,1,:) ...
+        );
+
+    A(:,3,1:cnL) = reshape((hl(:,caL) - dHxm1(:,caL)),[],1,cnL).*iiA3;
+    A(:,3,1:cnL) = reshape(0.25*hudlr(:,caL),[],1,cnL).*~aGS.*iiA3 + A(:,3,1:cnL);
+
+    iiA5 = cat( 1, ...
+        iiA(1:end-1,1,:), ...
+        false(1,1,cnL) ...
+        );
+
+    A(:,5,1:cnL) = reshape((hr(:,caL) - dHxp1(:,caL)),[],1,cnL).*iiA5;
+    A(:,5,1:cnL) = reshape(0.25*hudlr(:,caL),[],1,cnL).*~aGS.*iiA5 + A(:,5,1:cnL);
+
+    iiA6 = iiA5;
+    A(:,6,1:cnL) = reshape((-dHxp2(:,caL)),[],1,cnL).*iiA6;
+    A(:,6,1:cnL) = reshape(-0.25*hr(:,caL),[],1,cnL).*~aGS.*iiA6 + A(:,6,1:cnL);
+
+    A(ii,4,1:cnL) = - hudlr(ii,caL) - dHx(ii,caL);
+    A(~aGS) = 1.25*A(~aGS);
+
     for n = 1:cnL
-        ll = caL(n);
-
-        iiA = [ ...
-            false; ...
-            pLine(ii - 1,midIDx,n) > 0 & pLine(ii + 1,midIDx,n) > 0 & ...
-            pLine(ii,midIDx - 1,n) > 0 & pLine(ii,midIDx + 1,n) > 0; ...
-            false; ...
-            ];
-
-        iiA1 = [ false; false; false; false; iiA(5:end) ];
-        A(:,1,n) = - dHxm3(:,ll).*iiA1;
-
-        iiA2 = [ false; false; false; iiA(4:end) ];
-        A(:,2,n) = - dHxm2(:,ll).*iiA2;
-        A(:,2,n) = - 0.25*hl(:,ll).*~useGS(:,ll).*iiA2 + A(:,2,n);
-
-        iiA3 = [ false; false; iiA(3:end) ];
-        A(:,3,n) = (hl(:,ll) - dHxm1(:,ll)).*iiA3;
-        A(:,3,n) = 0.25*hudlr(:,ll).*~useGS(:,ll).*iiA3 + A(:,3,n);
-
-        iiA5 = [ iiA(1:end-1); false ];
-        A(:,5,n) = (hr(:,ll) - dHxp1(:,ll)).*iiA5;
-        A(:,5,n) = 0.25*hudlr(:,ll).*~useGS(:,ll).*iiA5 + A(:,5,n);
-
-        iiA6 = [ iiA(1:end-1); false ];
-        A(:,6,n) = (- dHxp2(:,ll)).*iiA6;
-        A(:,6,n) = - 0.25*hr(:,ll).*~useGS(:,ll).*iiA6 + A(:,6,n);
-
-        A(ii,4,n) = - hudlr(ii,ll) - dHx(ii,ll);
-        A(~useGS(:,ll),4,n) = 1.25*A(~useGS(:,ll),4,n);
-
         AA(4,3:end,n) = A(2:nx-3,6,n);
         AA(5,2:end,n) = A(2:nx-2,5,n);
         AA(6,:,n) = A(2:nx-1,4,n);

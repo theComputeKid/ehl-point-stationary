@@ -120,24 +120,13 @@ for it = 0:(nD-1)
         AA(9,1:end-3,n) = A(5:nx-1,1,n);
     end
 
-    X = zeros(nx,1,cnL);
-    parfor n = 1:cnL
-        kl = 3; ku = 2; transposed = false;
-        b = Y(:,1,n);
-        [LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
-            AA(:,:,n), kl, ku ...
-            );
-
-        X(:,:,n) = [ ...
-            0; ...
-            matlab.internal.decomposition.builtin.bandedSolve(...
-            LU, kl, ku, piv, b(1:end-1), transposed); ...
-            0; ...
-            ];
+    if obj.Execution.Device == "cpu_par"
+        X = bandedSolverCPU(Y,AA,cnL);
+    elseif obj.Execution.Device == "gpu"
+        X = utils.bandedSolveGPU(Y,AA(:,:,1:cnL));
     end
 
     p0 = pGS(:,caL);
-
 
     pGS(:,caL) = pGS(:,caL) + ...
         reshape( ...
@@ -161,4 +150,25 @@ for it = 0:(nD-1)
 
 end
 Lk.Results.p = pGS;
+end
+
+function X = bandedSolverCPU(Y,A,cnL)
+
+nx = size(A,2) + 2; 
+X = zeros(nx,1,cnL,"like",Y);
+parfor n = 1:cnL
+    kl = 3; ku = 2; transposed = false;
+    b = Y(:,1,n);
+    [LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
+        A(:,:,n), kl, ku ...
+        );
+
+    X(:,:,n) = [ ...
+        0; ...
+        matlab.internal.decomposition.builtin.bandedSolve(...
+        LU, kl, ku, piv, b(1:end-1), transposed); ...
+        0; ...
+        ];
+end
+
 end

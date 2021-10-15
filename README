@@ -11,12 +11,14 @@ Examples are provided in the +examples folder. To run them, you must be in the p
 >> examples.ex2
 >> examples.ex3
 >> examples.ex4
+>> examples.ex5
+>> examples.ex6
+>> examples.ex7
 
 Variable naming conventions are kept similar to those used in "Multilevel Methods in Lubrication".
 
 Things to do:
 - Optimize the coarse-grid refinement function
-- Parallelize the line relaxation function on the CPU
 - Optimize the line relaxation function on the GPU
 
 References:

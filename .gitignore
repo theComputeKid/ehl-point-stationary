@@ -2,6 +2,8 @@
 *.asv
 *.fig
 *.mat
+*.mexw64
+*.mexa64
 
 # IDE
 .vscode

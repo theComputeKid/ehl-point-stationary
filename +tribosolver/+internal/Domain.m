@@ -75,8 +75,8 @@ classdef Domain
                 y = domain.yin + (0:ny-1)*obj.dy;
             end
             
-            obj.x = repmat(reshape(x,[],1),1,ny);
-            obj.y = repmat(reshape(y,1,[]),nx,1);
+            obj.x = cast(repmat(reshape(x,[],1),1,ny),"like",p);
+            obj.y = cast(repmat(reshape(y,1,[]),nx,1),"like",p);
             %             obj.dx = gradient(obj.x);
             %             obj.dy = gradient(obj.y);
             

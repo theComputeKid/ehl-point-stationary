@@ -72,21 +72,11 @@ for j = jj
     A(:,4) = - hudlr(ii,j) - dHx(ii,j);
     A(iiJAC-1,4) = 1.25*A(iiJAC-1,4);
 
-    bA = flip(A.');
-
-    kl = 3; ku = 2; transposed = false;
-    b = Y(1:end-1);
-
-    [LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
-        bA, kl, ku ...
-        );
-
-    X = [ ...
-        zeros("like",p); ...
-        matlab.internal.decomposition.builtin.bandedSolve(...
-        LU, kl, ku, piv, b, transposed); ...
-        zeros("like",p); ...
-        ];
+    if obj.Execution.Device == "cpu_seq" || obj.Execution.Device == "cpu_par"
+        X = bandedSolverCPU(A,Y);
+    elseif obj.Execution.Device == "gpu_seq" || obj.Execution.Device == "gpu_par"
+        X = utils.bandedSolveGPU(A,Y);
+    end
 
     p0 = pGS(:,j);
     pGS(iiGS,j) = pGS(iiGS,j) + X(iiGS)*relGS;
@@ -108,4 +98,23 @@ for j = jj
 end
 
 Lk.Results.p = pGS;
+end
+
+function X = bandedSolverCPU(A,Y)
+
+bA = flip(A.');
+
+kl = 3; ku = 2; transposed = false;
+b = Y(1:end-1);
+
+[LU, piv, ~] = matlab.internal.decomposition.builtin.bandedFactor( ...
+    bA, kl, ku ...
+    );
+
+X = [ ...
+    zeros("like",b); ...
+    matlab.internal.decomposition.builtin.bandedSolve(...
+    LU, kl, ku, piv, b, transposed); ...
+    zeros("like",b); ...
+    ];
 end

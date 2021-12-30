@@ -1,26 +1,24 @@
-function X = bandedSolveGPU(Y,A)
+function X = bandedSolveGPU(A,Y)
 
 % Aggregate the bands
-ds = squeeze(A(2,:,:));
-dl = squeeze(A(3,:,:));
-d = squeeze(A(4,:,:));
-du = squeeze(A(5,:,:));
-dw = squeeze(A(6,:,:));
-Y = squeeze(Y);
+ds = A(:,2);
+dl = A(:,3);
+d =  A(:,4);
+du = A(:,5);
+dw = A(:,6);
+Y = Y(1:end-1,:);
 
-if ~isfile("+utils/bandedSolveGPUmex." + mexext)
+if ~isfile("+utils/pentasolver." + mexext)
     disp("Building cuda-mex file: Banded Solver")
-    mexcuda("+utils/bandedSolveGPUmex.cu","-outdir","+utils","-lcublas")
+    if ispc
+        !cd +utils && nmake
+    end
 end
 
-ds = gpuArray(ds);
-dl = gpuArray(dl);
-d = gpuArray(d);
-du = gpuArray(du);
-dw = gpuArray(dw);
-Y = gpuArray(Y);
+X = [ ...
+    zeros("like",Y); ...
+    utils.pentasolver(Y,ds,dl,d,du,dw); ...
+    zeros("like",Y); ...
+    ];
 
-X = utils.bandedSolveGPUmex(ds,dl,d,du,dw,Y);
-
-X = gather(X);
 end

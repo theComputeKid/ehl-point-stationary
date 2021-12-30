@@ -8,7 +8,7 @@ fb = Lk.fb;
 relH0 = obj.Relaxation.h0;
 h0 = Lk.Results.h0;
 
-dF = sum(p .* dx .* dy, "all") + fb;
+dF = gather(sum(p .* dx .* dy, "all") + fb);
 h0 = h0 + relH0*dF;
 
 for i = 1:obj.Domain.mgl

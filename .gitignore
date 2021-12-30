@@ -8,3 +8,6 @@
 # IDE
 .vscode
 .vs
+
+# CPP
+*.exp

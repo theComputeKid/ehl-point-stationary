@@ -1,6 +1,6 @@
 function results = ex7()
 
-% Example #7: Uses the gpu parallel line solver
+% Example #7: Uses the gpu sequential line solver
 %
 % To run, go to the project root directory and type: examples.ex7
 %
@@ -24,8 +24,8 @@ end
 
 function domain = setDomain()
 
-nx = 976; xin = -3; xout = 1.5;
-ny = 976; yin = -2.5; yout = 2.5;
+nx = 128; xin = -3; xout = 1.5;
+ny = 64; yin = -2.5; yout = 2.5;
 mgl = 1;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
@@ -34,7 +34,7 @@ end
 
 function moes = setMoes()
 
-M = 15; L = 5;
+M = 15; L = 0;
 H0 = -0.53;
 
 moes = tribosolver.Moes(M,L,H0);
@@ -43,8 +43,8 @@ end
 
 function exec = setExecution()
 
-% We solve using double precision using the CPU
-prec = "single"; dev = "gpu";
+% We solve using single precision using the GPU sequential solver.
+prec = "single"; dev = "gpu_seq";
 
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that

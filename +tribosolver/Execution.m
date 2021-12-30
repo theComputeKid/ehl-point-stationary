@@ -21,7 +21,7 @@ classdef Execution
             } = "double";
         
         Device(1,1) string { ...
-            ismember(Device,["gpu","cpu_seq","cpu_par","gpu"]) ...
+            ismember(Device,["gpu_seq","cpu_seq","cpu_par","gpu_par"]) ...
             } = "cpu_seq";
         
         Verbosity(1,1) uint64 {mustBeNonempty} = false;
@@ -52,7 +52,7 @@ classdef Execution
         
         function proto = getProto(obj)
             proto = cast([],obj.BasePrecision);
-            if strcmpi(obj.Device,"gpu")
+            if strcmpi(obj.Device,"gpu_seq") || strcmpi(obj.Device,"gpu_par")
                 proto = gpuArray(proto);
             end
         end

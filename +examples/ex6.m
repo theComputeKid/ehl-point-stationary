@@ -24,9 +24,9 @@ end
 
 function domain = setDomain()
 
-nx = 64; xin = -3; xout = 1.5;
-ny = 64; yin = -2.5; yout = 2.5;
-mgl = 5;
+nx = 500; xin = -3; xout = 1.5;
+ny = 500; yin = -2.5; yout = 2.5;
+mgl = 2;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
 

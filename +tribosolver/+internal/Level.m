@@ -48,15 +48,16 @@ classdef Level < handle
             
             [nx,ny] = size(obj.Domain.x);
             obj.k = initK(nx,ny,obj.Domain.dx,obj.Domain.dy);
+            obj.k = cast(obj.k,"like",obj.h);
             
-            obj.fb = cast(-2*pi/3,"like",obj.h);
+            obj.fb = cast(-2*pi/3,underlyingType(obj.k));
             obj.p_rhs = zeros(nx,ny,"like",obj.h);
             obj.p_old = zeros(nx,ny,"like",obj.h);
             
             % TODO: Create some algorithm that finds the best FFT padding
             % for the fastest convolution.
-            padX = obj.Domain.nx*3;
-            padY = obj.Domain.ny*3;
+            padX = 2^nextpow2(obj.Domain.nx*2);
+            padY = 2^nextpow2(obj.Domain.ny*2);
             obj.k_fft = fft2(obj.k,padX,padY);
             
             obj.calcDeformation();
@@ -73,7 +74,7 @@ classdef Level < handle
                 nx = obj.Domain.nx;
                 ny = obj.Domain.ny;
                 [padX,padY] = size(obj.k_fft);
-                w=ifft2(fft2(obj.Results.p,padX,padY) .* obj.k_fft);
+                w=ifft2(fft2(obj.Results.p,padX,padY) .* obj.k_fft,"symmetric");
                 obj.Results.w=w(nx:(2*nx-1),ny:(2*ny-1));
                 
             end

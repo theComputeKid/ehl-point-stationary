@@ -30,8 +30,8 @@ function hasConverged = checkTol(obj,p,h,N)
 pNew = obj.Levels(obj.Domain.mgl).Results.p;
 hNew = obj.Levels(obj.Domain.mgl).Results.h;
 
-pTol = max(abs(pNew - p),[],"all");
-hTol = max(abs(hNew - h),[],"all");
+pTol = gather(max(abs(pNew - p),[],"all"));
+hTol = gather(max(abs(hNew - h),[],"all"));
 
 fbNew = sum( ...
     pNew .* ...
@@ -45,7 +45,7 @@ fb = sum( ...
     obj.Levels(obj.Domain.mgl).Domain.dy, ...
     "all");
 
-fbTol = abs(fbNew - fb);
+fbTol = gather(abs(fbNew - fb));
 
 if obj.Execution.Verbosity
     disp("N: " + N + " H0: " + obj.Levels(obj.Domain.mgl).Results.h0 + ...

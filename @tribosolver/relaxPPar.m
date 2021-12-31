@@ -27,7 +27,12 @@ nL = length(aL); % Number of active lines
 
 Y = zeros(nx-1,1,nL,"like",p);
 A = zeros(nx,6,nL,"like",p);
-AA = zeros(3+size(A,2),size(A,1)-2,nL,"like",A);
+
+if obj.Execution.Device == "cpu_par"
+    AA = zeros(3+size(A,2),size(A,1)-2,nL,"like",A);
+elseif obj.Execution.Device == "gpu_par"
+    AA = zeros(size(A,1)-2,size(A,2),nL,"like",A);
+end
 
 for it = 0:(nD-1)
 
@@ -111,19 +116,26 @@ for it = 0:(nD-1)
     A(ii,4,1:cnL) = - hudlr(ii,caL) - dHx(ii,caL);
     A(~aGS) = 1.25*A(~aGS);
 
-    for n = 1:cnL
-        AA(4,3:end,n) = A(2:nx-3,6,n);
-        AA(5,2:end,n) = A(2:nx-2,5,n);
-        AA(6,:,n) = A(2:nx-1,4,n);
-        AA(7,1:end-1,n) = A(3:nx-1,3,n);
-        AA(8,1:end-2,n) = A(4:nx-1,2,n);
-        AA(9,1:end-3,n) = A(5:nx-1,1,n);
-    end
-
     if obj.Execution.Device == "cpu_par"
-        X = bandedSolverCPU(Y,AA,cnL);
-    elseif obj.Execution.Device == "gpu"
-        X = utils.bandedSolveGPU(Y,AA(:,:,1:cnL));
+        for n = 1:cnL
+            AA(4,3:end,n) = A(2:nx-3,6,n);
+            AA(5,2:end,n) = A(2:nx-2,5,n);
+            AA(6,:,n) = A(2:nx-1,4,n);
+            AA(7,1:end-1,n) = A(3:nx-1,3,n);
+            AA(8,1:end-2,n) = A(4:nx-1,2,n);
+            AA(9,1:end-3,n) = A(5:nx-1,1,n);
+        end
+        X = bandedSolverCPU(gather(Y),gather(AA),cnL);
+    elseif obj.Execution.Device == "gpu_par"
+        AA(3:end,2,1:cnL) = A(2:nx-3,6,1:cnL);
+        AA(2:end,3,1:cnL) = A(2:nx-2,5,1:cnL);
+        AA(:,4,1:cnL) = A(2:nx-1,4,1:cnL);
+        AA(1:end-1,5,1:cnL) = A(3:nx-1,3,1:cnL);
+        AA(1:end-2,6,1:cnL) = A(4:nx-1,2,1:cnL);
+        AA = AA(:,:,1:cnL);
+        X = utils.bandedSolveGPU(AA,squeeze(Y(:,:,1:cnL)));
+    else
+        error("Invalid Execution strategy")
     end
 
     p0 = pGS(:,caL);
@@ -134,16 +146,21 @@ for it = 0:(nD-1)
         nx,[]);
     del = pGS(:,caL) - p0;
 
-    for n = 1:cnL
-        ll = caL(n);
-        [iiJAC] = find(~useGS(:,ll));
+    % TODO: modify to work efficiently with GPUs, by removing find.
+    if obj.Execution.Device ~= "gpu_par"
+        for n = 1:cnL
+            ll = caL(n);
 
-        iiJAC(iiJAC < 3 | iiJAC > (nx - 2)) = [];
-        pGS(iiJAC - 1, ll) = pGS(iiJAC - 1, ll) - 0.25*del(iiJAC,n);
-        pGS(iiJAC, ll - 1) = pGS(iiJAC, ll - 1) - 0.25*del(iiJAC,n);
-        pGS(iiJAC + 1, ll) = pGS(iiJAC + 1, ll) - 0.25*del(iiJAC,n);
-        pGS(iiJAC, ll + 1) = pGS(iiJAC, ll + 1) - 0.25*del(iiJAC,n);
+            [iiJAC] = find(~useGS(:,ll));
 
+            if ~isempty(iiJAC)
+                iiJAC(iiJAC < 3 | iiJAC > (nx - 2)) = [];
+                pGS(iiJAC - 1, ll) = pGS(iiJAC - 1, ll) - 0.25*del(iiJAC,n);
+                pGS(iiJAC, ll - 1) = pGS(iiJAC, ll - 1) - 0.25*del(iiJAC,n);
+                pGS(iiJAC + 1, ll) = pGS(iiJAC + 1, ll) - 0.25*del(iiJAC,n);
+                pGS(iiJAC, ll + 1) = pGS(iiJAC, ll + 1) - 0.25*del(iiJAC,n);
+            end
+        end
     end
 
     pGS(pGS<0) = 0;

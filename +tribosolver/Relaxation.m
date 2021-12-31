@@ -69,7 +69,12 @@ classdef Relaxation
     
     methods
         
-        function obj = Relaxation(jac,gs,h0,numCycles,gamma,switchEpsValue)
+        function obj = Relaxation( ...
+                jac,gs,h0, ...
+                numCycles,gamma,...
+                switchEpsValue, ...
+                itPre, itMain, itPost ...
+                )
             
             % Syntax:
             % obj = Relaxation(jac,gs,h0)
@@ -79,7 +84,7 @@ classdef Relaxation
                 return;
             end
             
-            narginchk(3,6)
+            narginchk(3,9)
             
             obj.jac = jac;
             obj.gs = gs;
@@ -96,7 +101,18 @@ classdef Relaxation
             if nargin > 5
                 obj.switchEpsValue = switchEpsValue;
             end
-            
+
+            if nargin > 6
+                obj.itPre = itPre;
+            end
+
+            if nargin > 7
+                obj.itMain = itMain;
+            end
+
+            if nargin > 8
+                obj.itPost = itPost;
+            end
         end
         
     end

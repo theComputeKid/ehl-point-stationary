@@ -1,8 +1,8 @@
-function results = ex7()
+function results = ex8()
 
-% Example #7: Uses the gpu sequential line solver for a single grid.
+% Example #8: Uses the gpu parallel line solver with a single grid.
 %
-% To run, go to the project root directory and type: examples.ex7
+% To run, go to the project root directory and type: examples.ex8
 %
 % Copyright (C) 2021 theComputeKid
 
@@ -24,8 +24,8 @@ end
 
 function domain = setDomain()
 
-nx = 128; xin = -3; xout = 1.5;
-ny = 64; yin = -2.5; yout = 2.5;
+nx = 1024; xin = -3; xout = 1.5;
+ny = 1024; yin = -2.5; yout = 2.5;
 mgl = 1;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
@@ -44,7 +44,7 @@ end
 function exec = setExecution()
 
 % We solve using single precision using the GPU sequential solver.
-prec = "single"; dev = "gpu_seq";
+prec = "single"; dev = "gpu_par";
 
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that

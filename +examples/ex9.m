@@ -1,8 +1,8 @@
-function results = ex7()
+function results = ex9()
 
-% Example #7: Uses the gpu sequential line solver for a single grid.
+% Example #9: Uses the gpu parallel line solver with multiple grids.
 %
-% To run, go to the project root directory and type: examples.ex7
+% To run, go to the project root directory and type: examples.ex9
 %
 % Copyright (C) 2021 theComputeKid
 
@@ -24,9 +24,9 @@ end
 
 function domain = setDomain()
 
-nx = 128; xin = -3; xout = 1.5;
+nx = 64; xin = -3; xout = 1.5;
 ny = 64; yin = -2.5; yout = 2.5;
-mgl = 1;
+mgl = 3;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
 
@@ -44,7 +44,7 @@ end
 function exec = setExecution()
 
 % We solve using single precision using the GPU sequential solver.
-prec = "single"; dev = "gpu_seq";
+prec = "single"; dev = "gpu_par";
 
 % A verbosity level of 2 indicates the display of both text (verbosity > 0)
 % and graphical (verbosity > 1) plots during the solution scheme. Note that
@@ -62,6 +62,7 @@ function relax = setRelaxation()
 jacobianSORFactor = 2e-1;
 gsSORFactor = 3e-1;
 h0UpdateFactor = 5e-3;
+epsSwitch = 0.3;
 
 % We set a maximum number of FMG Cycles (in-case our solution does not
 % converge)
@@ -70,9 +71,16 @@ numCycles = 50;
 % A FMG V-Cycle would be gamma=1, while an FMG W-Cycle would be gamma=2
 gamma = 2;
 
+% Number of MultiGrid Iterations
+itPre = 5;
+itPost = 5;
+itMain = 10;
+
 relax = tribosolver.Relaxation( ...
     jacobianSORFactor,gsSORFactor,h0UpdateFactor, ...
-    numCycles,gamma ...
+    numCycles,gamma, ...
+    epsSwitch, ...
+    itPre, itMain, itPost ...
     );
 
 end

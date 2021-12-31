@@ -35,36 +35,14 @@ pcim1jm1(2:nxc,2:nyc) = ( ...
     pc(1:end-1,1:end-1) - pco(1:end-1,1:end-1) ...
     )*0.25;
 
-[pcim1, pcjm1, pcim1jm1, p] = gather(pcim1,pcjm1,pcim1jm1, p);
+iic = 2:nxc;
+iif = iif(2:end);
+jjc = 2:nyc;
+jjf = jjf(2:end);
 
-for i=2:nxc
-    
-    iff = 2*i - 1;
-    
-    for j=2:nyc
-        
-        jff = 2*j - 1;
-        
-        if p(iff - 1,jff) > 0 && j < nyc
-            p(iff - 1,jff) = p(iff - 1,jff) + ...
-                pcim1(i,j);
-        end
-        
-        if p(iff, jff - 1) > 0 && i < nxc
-            p(iff, jff - 1) = p(iff, jff - 1) + ...
-                pcjm1(i,j);
-        end
-        
-        if (p(iff - 1, jff - 1) > 0)
-            p(iff - 1, jff - 1) = p(iff - 1, jff - 1) + ...
-                pcim1jm1(i,j);
-        end
-    end
-end
-
-if isgpuarray(pc)
-    p = gpuArray(p);
-end
+p(iif-1,jjf) = p(iif-1,jjf) + pcim1(iic,jjc).*(p(iif-1,jjf) > 0);
+p(iif,jjf-1) = p(iif,jjf-1) + pcjm1(iic,jjc).*(p(iif,jjf-1) > 0);
+p(iif-1,jjf-1) = p(iif-1,jjf-1) + pcim1jm1(iic,jjc).*(p(iif-1,jjf-1) > 0);
 
 p(p<0)=0;
 obj.Levels(l).Results.p = p;

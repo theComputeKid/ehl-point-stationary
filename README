@@ -10,21 +10,21 @@ Based on the theory presented in Venner and Lubrecht's book "Multilevel Methods 
 Examples are provided in the +examples folder. To run them, you must be in the project root folder (i.e. where this README is). From there, you can run examples from the examples namespace. E.g. from the command window in the root folder:
 
 CPU Examples:
->> examples.ex1
->> examples.ex2
->> examples.ex3
->> examples.ex4
->> examples.ex5
->> examples.ex6
+>> examples.ex1 : Basic Example with Result Plots
+>> examples.ex2 : Basic Example with Textual Verbosity
+>> examples.ex3 : Non-Isoviscous Fluids with Graphical Verbosity
+>> examples.ex4 : Non-Isoviscous Fluids with Single Precision
+>> examples.ex5 : Uses the parallel line solver, but single grid only
+>> examples.ex6 : Uses the parallel line solver, but with multiple grids
 
 GPU Examples:
->> examples.ex7
->> examples.ex8
->> examples.ex9
+>> examples.ex7 : Sequential GPU solver
+>> examples.ex8 : Parallel GPU line solver, but with single grid
+>> examples.ex9 : Parallel GPU line solver, but with multiple grids
 
-Note on GPU support (Windows): Build mex using the .\make-mex.bat script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. To build, a $MATLABROOT environment variable must be available, and for windows, the MSVC build environment must be initialised via the MSVS developer command prompt. If the environment is set correctly, the mex file will build automatically as part of the solution process.
-
-Note on GPU support (Linux): Build mex using the ./make-mex.sh script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. If the variables required by the script are set correctly, the mex file will build automatically as part of the solution process.
+Note on GPU support: GPU support requires mex building. Pre-built mex binary files are available from the releases section. Place them inside the +utils folder after download. If you wish to build them yourself:
+- Windows: Use the .\make-mex.bat script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. To build, a $MATLABROOT environment variable must be available (or else specify explicitly in the bat file) and the MSVC build environment must be initialised via the MSVS developer command prompt. If the environment is set correctly, the mex file will build automatically as part of the solution process, otherwise call the script directly from inside the +utils folder.
+- Linux: Use the ./make-mex.sh script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. If the variables required by the script are set correctly, the mex file will build automatically as part of the solution process.
 
 Variable naming conventions are kept similar to those used in "Multilevel Methods in Lubrication".
 

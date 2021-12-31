@@ -24,8 +24,10 @@ CXXFLAGS="-x cu -std=c++17 -Xcompiler -fPIC"
 CXXDEBUGFLAGS="-g -G $CXXFLAGS"
 CXXRELEASEFLAGS="-O2 $CXXFLAGS -Xcompiler -O2"
 
-if [ "$1" = "debug" ]; then
+if [[ "$1" == "debug" ]]; then
+	echo Building in debug
 	$NVCC $CXXDEBUGFLAGS $DEFINES $INC pentasolver.cpp -o $OUT $LDFLAGS
 else
+	echo Building in release
 	$NVCC $CXXRELEASEFLAGS $DEFINES $INC pentasolver.cpp -o $OUT $LDFLAGS
 fi

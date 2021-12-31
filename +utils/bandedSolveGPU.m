@@ -12,6 +12,8 @@ if ~isfile("+utils/pentasolver." + mexext)
     disp("Building cuda-mex file: Banded Solver")
     if ispc
         !cd +utils && .\make-mex.bat
+    else
+        !cd +utils && ./make-mex.sh
     end
 end
 

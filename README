@@ -7,6 +7,12 @@ Based on the theory presented in Venner and Lubrecht's book "Multilevel Methods 
 - Parallel line solvers are provided.
 - An option to execute the solver using the GPU is added
 
+There are multiple execution strategies that can be used:
+- cpu_seq : The CPU will solve and progress in the domain line by line, using a banded matrix solver with 6 bands. This is faithful to the algorithm mentioned in the book.
+- cpu_par : The CPU solves in parallel, solving multiple lines at the same time, provided that the data required does not overlap (similar to a red-black algorithm, except for lines). There is some overhead to launching a parallel pool. Requires Parallel Computing Toolbox.
+- gpu_seq : The GPU will solve and progress in the domain line by line, using a banded matrix solver with 5 bands. Only for debugging purposes because this is slow.
+- gpu_par : The GPU solves in parallel, solving multiple lines at the same time, provided that the data required does not overlap (similar to a red-black algorithm, except for lines). Performance relative to the CPU will scale with the number of lines that can be solved in parallel. 
+
 Examples are provided in the +examples folder. To run them, you must be in the project root folder (i.e. where this README is). From there, you can run examples from the examples namespace. E.g. from the command window in the root folder:
 
 CPU Examples:
@@ -17,10 +23,14 @@ CPU Examples:
 >> examples.ex5 : Uses the parallel line solver, but single grid only
 >> examples.ex6 : Uses the parallel line solver, but with multiple grids
 
-GPU Examples:
+GPU Examples (require MATLAB with Parallel Computing Toolbox and a supported NVIDIA GPU):
 >> examples.ex7 : Sequential GPU solver
 >> examples.ex8 : Parallel GPU line solver, but with single grid
 >> examples.ex9 : Parallel GPU line solver, but with multiple grids
+
+Benchmarks are provided to show the difference in performance between the execution modes. They are located in the +bench folder:
+>> bench.singleGrid : Single Grid benchmarks for 5 iterations.
+>> bench.multiGrid : Multi-Grid benchmarks for 1 iteration.
 
 Note on GPU support: GPU support requires mex building. Pre-built mex binary files are available from the releases section. Place them inside the +utils folder after download. If you wish to build them yourself:
 - Windows: Use the .\make-mex.bat script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. To build, a $MATLABROOT environment variable must be available (or else specify explicitly in the bat file) and the MSVC build environment must be initialised via the MSVS developer command prompt. If the environment is set correctly, the mex file will build automatically as part of the solution process, otherwise call the script directly from inside the +utils folder.

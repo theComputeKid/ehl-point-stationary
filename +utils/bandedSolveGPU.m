@@ -13,7 +13,7 @@ if ~isfile("+utils/pentasolver." + mexext)
     if ispc
         !cd +utils && .\make-mex.bat
     else
-        !cd +utils && ./make-mex.sh
+        !cd +utils && chmod +x make-mex.sh && ./make-mex.sh
     end
 end
 

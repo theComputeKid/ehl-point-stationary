@@ -4,6 +4,7 @@
 
 Based on the theory presented in Venner and Lubrecht's book "Multilevel Methods in Lubrication", with the following modifications:
 - Fourier Transforms are used to calculate deformation instead of the Multi-Level Multi-Integration mentioned in the book
+- Parallel line solvers are provided.
 - An option to execute the solver using the GPU is added
 
 Examples are provided in the +examples folder. To run them, you must be in the project root folder (i.e. where this README is). From there, you can run examples from the examples namespace. E.g. from the command window in the root folder:

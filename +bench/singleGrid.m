@@ -1,42 +1,55 @@
-function singleGrid()
+function results = singleGrid(backend,precision)
 
-% Benchmarks
+% singleGrid: Benchmarks Single Grid solver. Reasonably long running.
 %
 % To run, go to the project root directory and type: bench.singleGrid
+% Optionally specify backend (cpu_seq, cpu_par, gpu_par) and precision
+% (single, double). E.g.: bench.singleGrid("cpu_par","single"). Defaults to
+% "cpu_seq" and "double".
 %
-% Copyright (C) 2021 theComputeKid
+% Copyright (C) 2021-2022 theComputeKid
 
-narginchk(0,0)
+narginchk(0,2)
+
+if ~nargin
+    backend = "cpu_seq";
+end
+
+if nargin < 2
+    precision = "double";
+end
 
 domain = setDomain();
 moes = setMoes();
+exec = setExecution(backend,precision);
 relax = setRelaxation();
-tol = setTolerance();
-disp("------------")
-disp("SINGLE GRID BENCHMARKS:")
-disp("Total Cycles: " + relax.numCycles)
-disp("Coarsest Grid Density: " + domain.nx + " x " + domain.ny)
 
-for i = ["cpu_par", "cpu_seq", "gpu_par"]
-    disp("------------")
-    disp("CASE: " + i)
-    disp("------------")
-    exec = setExecution(i);
-    model = tribosolver(domain,moes,exec,relax,tol);
-    model.solve();
+% Ensure parallel pool creation not timed as part of benchmarks.
+if backend == "cpu_par"
+    if isempty(gcp('nocreate'))
+        parpool("threads");
+    end
 end
 
+disp("Backend: " + backend)
+disp("Precision: " + precision)
+
+if backend == "cpu_par" || backend == "cpu_seq"
+    info = utils.cpuinfo;
+    disp(info.CPUName)
+else
+    disp(gpuDevice().Name)
 end
 
-function tol = setTolerance()
-p = 5e-3; h = 1e-2; fb = 1e-2;
-tol = tribosolver.Tolerance(p,h,fb);
+model = tribosolver(relax,domain,exec,moes);
+results = model.solve();
+
 end
 
 function domain = setDomain()
 
-nx = 1024; xin = -4.5; xout = 1.5;
-ny = 1024; yin = -3; yout = 3;
+nx = 1024; xin = -2.5; xout = 1.5;
+ny = 1024; yin = -2.5; yout = 2.5;
 mgl = 1;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
@@ -44,27 +57,35 @@ domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
 end
 
 function moes = setMoes()
-M = 10; L = 2;
-H0 = -0.53;
+M = 15; L = 0;
+H0 = -0.63;
 moes = tribosolver.Moes(M,L,H0);
 end
 
-function exec = setExecution(dev)
-prec = "single";
+function exec = setExecution(backend,precision)
 verbosity = 1;
-exec = tribosolver.Execution(prec,dev,verbosity);
+exec = tribosolver.Execution(precision,backend,verbosity);
 end
 
 function relax = setRelaxation()
+
 jacobianSORFactor = 6e-1;
 gsSORFactor = 8e-1;
-h0UpdateFactor = 5e-3;
-numCycles = 3;
+h0UpdateFactor = 1e-3;
+epsSwitch = 0.3;
+
+numCycles = 10;
 gamma = 2;
+
+itPre = 3;
+itPost = 3;
+itMain = 10;
 
 relax = tribosolver.Relaxation( ...
     jacobianSORFactor,gsSORFactor,h0UpdateFactor, ...
-    numCycles,gamma ...
+    numCycles,gamma, ...
+    epsSwitch, ...
+    itPre, itMain, itPost ...
     );
 
 end

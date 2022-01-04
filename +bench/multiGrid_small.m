@@ -1,10 +1,10 @@
-function results = multiGrid(backend,precision)
+function results = multiGrid_small(backend,precision)
 
-% multiGrid: Benchmarks MultGrid solver. Reasonably long running.
+% multiGrid_small: Benchmarks MultGrid solver. Reasonably long running.
 %
-% To run, go to the project root directory and type: bench.multiGrid
+% To run, go to the project root directory and type: bench.multiGrid_small
 % Optionally specify backend (cpu_seq, cpu_par, gpu_par) and precision
-% (single, double). E.g.: bench.multiGrid("cpu_par","single"). Defaults to
+% (single, double). E.g.: bench.multiGrid_small("cpu_par","single"). Defaults to
 % "cpu_seq" and "double".
 %
 % Copyright (C) 2021-2022 theComputeKid

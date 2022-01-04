@@ -57,8 +57,8 @@ domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
 end
 
 function moes = setMoes()
-M = 20; L = 0;
-H0 = -0.63;
+M = 50; L = 0;
+H0 = -0.9;
 moes = tribosolver.Moes(M,L,H0);
 end
 

@@ -1,10 +1,10 @@
-function results = singleGrid(backend,precision)
+function results = singleGrid_small(backend,precision)
 
 % singleGrid: Benchmarks Single Grid solver. Reasonably long running.
 %
-% To run, go to the project root directory and type: bench.singleGrid
+% To run, go to the project root directory and type: bench.singleGrid_small
 % Optionally specify backend (cpu_seq, cpu_par, gpu_par) and precision
-% (single, double). E.g.: bench.singleGrid("cpu_par","single"). Defaults to
+% (single, double). E.g.: bench.singleGrid_small("cpu_par","single"). Defaults to
 % "cpu_seq" and "double".
 %
 % Copyright (C) 2021-2022 theComputeKid
@@ -48,8 +48,8 @@ end
 
 function domain = setDomain()
 
-nx = 1024; xin = -2.5; xout = 1.5;
-ny = 1024; yin = -2.5; yout = 2.5;
+nx = 128; xin = -2.5; xout = 1.5;
+ny = 128; yin = -2.5; yout = 2.5;
 mgl = 1;
 
 domain = tribosolver.Domain(xin,xout,nx,yin,yout,ny,mgl);
@@ -74,7 +74,7 @@ gsSORFactor = 8e-1;
 h0UpdateFactor = 1e-3;
 epsSwitch = 0.3;
 
-numCycles = 10;
+numCycles = 50;
 gamma = 2;
 
 itPre = 3;

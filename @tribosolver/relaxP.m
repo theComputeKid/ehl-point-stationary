@@ -101,9 +101,18 @@ end
 
 Lk.calcDeformation();
 
+% The display is just for illustrative purposes. It is not meant to be an
+% accurate representation. It is set to a 256x256 surf plot.
 if obj.Execution.Verbosity > 1
-    surf(Lk.Domain.x,Lk.Domain.y,pGS);
+    N = 128;
+    x = imresize(Lk.Domain.x,[N,N]);
+    y = imresize(Lk.Domain.y,[N,N]);
+    plotp = imresize(pGS,[N,N]);
+    plotp(plotp < 0) = 0;
+    surf(x,y,plotp);
     xlabel("X"); ylabel("Y"); zlabel("P");
+    xlim("tight");
+    ylim("tight");
     title("P: Level " + l)
     drawnow
 end

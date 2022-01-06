@@ -20,7 +20,7 @@ LDFLAGS="-shared -L$MATLIBDIR -lmwgpu -lmx -lmex -lmat -lcusparse -lcublas"
 DEFINES="-DMATLAB_MEXCMD_RELEASE=R2018a -DMX_COMPAT_64 -DMATLAB_MEX_FILE"
 
 # Compiler Flags
-CXXFLAGS="-x cu -std=c++17 -Xcompiler -fPIC"
+CXXFLAGS="-x cu -std=c++17 -Xcompiler -fPIC -arch=all"
 CXXDEBUGFLAGS="-g -G $CXXFLAGS"
 CXXRELEASEFLAGS="-O2 $CXXFLAGS -Xcompiler -O2"
 

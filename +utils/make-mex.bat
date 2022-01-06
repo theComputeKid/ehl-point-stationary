@@ -14,7 +14,7 @@ SET LDFLAGS=-shared -L%MATLIBDIR% -llibmx -llibmex -llibmat -lgpu -lcusparse -lc
 SET DEFINES=-DMATLAB_MEXCMD_RELEASE=R2018a -DMX_COMPAT_64 -DMATLAB_MEX_FILE
 
 @REM Compiler Flags
-SET CXXFLAGS=-x cu -std=c++17
+SET CXXFLAGS=-x cu -std=c++17 -arch=all
 SET CXXDEBUGFLAGS=-g -G %CXXFLAGS%
 SET CXXRELEASEFLAGS=-O2 %CXXFLAGS% -Xcompiler -O2
 

@@ -32,9 +32,9 @@ Benchmarks are provided to show the difference in performance between the execut
 >> bench.singleGrid : Single Grid benchmarks for 5 iterations.
 >> bench.multiGrid : Multi-Grid benchmarks for 1 iteration.
 
-Note on GPU support: GPU support requires mex building. Pre-built mex binary files are available from the releases section. Place them inside the +utils folder after download. If you wish to build them yourself:
-- Windows: Use the .\make-mex.bat script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. To build, a $MATLABROOT environment variable must be available (or else specify explicitly in the bat file) and the MSVC build environment must be initialised via the MSVS developer command prompt. If the environment is set correctly, the mex file will build automatically as part of the solution process, otherwise call the script directly from inside the +utils folder.
-- Linux: Use the ./make-mex.sh script provided in the +utils folder. The mex file currently uses C++17, which needs a newer version of MATLAB than R2021b. So mexcuda can not be used and a local install of CUDA >= 11.2 must be provided. If the variables required by the script are set correctly, the mex file will build automatically as part of the solution process. (If using WSL, make sure the script has LF endings instead of CRLF)
+Note on GPU support: GPU support requires mex building, as a batch pentadiagonal solver is not part of MATLAB (yet). The mex file uses C++17, which needs a (recent) version of MATLAB that uses a version of CUDA that supports it. It is built automatically as part of the solution process when required. No user intervention is required.
+
+Tested on MATLAB R2024a.
 
 Variable naming conventions are kept similar to those used in "Multilevel Methods in Lubrication".
 

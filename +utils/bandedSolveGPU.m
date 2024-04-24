@@ -9,12 +9,8 @@ dw = squeeze(A(:,6,:));
 Y = Y(1:end-1,:);
 
 if ~isfile("+utils/pentasolver." + mexext)
-    disp("Building cuda-mex file: Banded Solver")
-    if ispc
-        !cd +utils && .\make-mex.bat
-    else
-        !cd +utils && chmod +x make-mex.sh && ./make-mex.sh
-    end
+    disp("Building mexcuda file: Banded Solver")
+    mexcuda -lcusparse -lcublas +utils/pentasolver.cpp -outdir +utils
 end
 
 X = zeros(size(Y,1) + 2, size(Y,2),"like",Y);

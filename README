@@ -34,7 +34,7 @@ Benchmarks are provided to show the difference in performance between the execut
 
 Note on GPU support: GPU support requires mex building, as a batch pentadiagonal solver is not part of MATLAB (yet). The mex file uses C++17, which needs a (recent) version of MATLAB that uses a version of CUDA that supports it. It is built automatically as part of the solution process when required. No user intervention is required.
 
-Tested on MATLAB R2024a.
+Tested on MATLAB R2023b. In MATLAB 2024a, the banded solver now only accepts a square full matrix, which requires changes to the project. Previously, supplying only the bands of the matrix was sufficient.
 
 Variable naming conventions are kept similar to those used in "Multilevel Methods in Lubrication".
 
